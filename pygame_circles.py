@@ -1,4 +1,3 @@
-from turtle import circle
 import pygame
 import math
 import random
@@ -43,7 +42,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-        keystate = pygame.key.get_pressed()
         counter += 1
         screen.fill(backgroundColor)
         for circle in circles:
