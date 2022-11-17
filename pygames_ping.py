@@ -1,4 +1,5 @@
 import pygame
+import math
 
 screenRect = pygame.Rect((0,0,400,500))
 objectColor = pygame.Color(255, 255, 255)
@@ -35,12 +36,19 @@ class Ball(pygame.sprite.Sprite):
         if gameContext["gameState"]==1:
             return
         self.rect.move_ip(self.moveV)
-        if self.rect.x<0 or self.rect.right>screenRect.width:
+        if (self.rect.x<0 and self.moveV.x<0) or (self.rect.right>screenRect.width and self.moveV.x>0):
             self.moveV.x = -self.moveV.x
-        if self.rect.y<0 or self.rect.bottom>self.limit:
+        if self.rect.y<0:
             self.moveV.y = -self.moveV.y
-        if self.rect.bottom>self.limit and (self.rect.x+self.bsize/2<self.brett.rect.x or self.rect.right-self.bsize/2>self.brett.rect.right):
-            self.lost = True
+        elif self.rect.bottom>self.limit:
+            if self.rect.x+self.bsize/2<self.brett.rect.x or self.rect.right-self.bsize/2>self.brett.rect.right:
+                self.lost = True
+            else:
+                self.moveV.y = -self.moveV.y
+                m = (self.rect.centerx-self.brett.rect.centerx)/(self.brett.rect.width/2)
+                if abs(m)>0.5:
+                    #print(f"rotate {m}")
+                    self.moveV.rotate_rad_ip(math.sqrt(abs(m))*(1 if m>0 else -1))
     def reset(self):
         self.rect.center = screenRect.center
         self.lost = False
@@ -51,6 +59,8 @@ class Ball(pygame.sprite.Sprite):
             self.moveV.x = -self.moveV.x
         else:
             self.moveV.y = -self.moveV.y
+    def speedUp(self):
+        self.moveV.scale_to_length(self.moveV.length()+2)
 
 class Label(pygame.sprite.Sprite):
     def __init__(self,gameContext,text):
@@ -92,11 +102,16 @@ def main():
     }
     tiles = []
     lblGameOver = Label(gameContext,"GAME OVER")
+    tilesMaxButton = 0;
     for x in range(0,Tile.columns):
         for y in range(0,Tile.rows):
             tile = Tile(x,y)
             tiles.append(tile)
             group.add(tile)
+            tilesMaxButton = max(tilesMaxButton,tile.rect.bottom)
+    tilesMaxCount = len(tiles)
+    tilesCount = tilesMaxCount
+    
     
     while running:
         for event in pygame.event.get():
@@ -110,6 +125,7 @@ def main():
                 gameContext["gameState"] = 0
                 lblGameOver.kill()
                 ball.reset()
+                tilesCount = tilesMaxCount
                 for tile in tiles:
                     group.add(tile)
         screen.fill(backgroundColor)
@@ -122,6 +138,12 @@ def main():
                 if tile.alive() and ball.rect.colliderect(tile.rect):
                     ball.tileCollision(tile)
                     tile.kill()
+                    tilesCount-=1
+            if tilesCount==0 and ball.rect.top>tilesMaxButton:
+                for tile in tiles:
+                    group.add(tile)
+                tilesCount = tilesMaxCount
+                ball.speedUp()
         group.draw(screen)
         pygame.display.flip()
         clock.tick(50)
