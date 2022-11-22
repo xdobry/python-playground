@@ -11,46 +11,65 @@ class Brett(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface(self.bsize)
-        self.xpos = screenRect.width/2-self.bsize[1]/2
-        self.ypos = screenRect.height-self.bsize[1]-5
-        self.rect = pygame.Rect((self.xpos,self.ypos),self.image.get_rect().size)
+        xpos = screenRect.width/2-self.bsize[1]/2
+        ypos = screenRect.height-self.bsize[1]-5
+        self.rect = pygame.Rect((xpos,ypos),self.image.get_rect().size)
         self.image.fill(objectColor)
         
     def move(self,direction):
         self.rect.move_ip(direction * self.speed, 0)
         self.rect = self.rect.clamp(screenRect)
+    def reset(self):
+        self.rect.x = screenRect.width/2-self.bsize[1]/2
 
 class Ball(pygame.sprite.Sprite):
     bsize = 10
     speed = 3
     def __init__(self,brett):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((self.bsize,self.bsize))
+        self.image = pygame.Surface((self.bsize,self.bsize),pygame.SRCALPHA)
         pygame.draw.circle(self.image,objectColor,(self.bsize/2,self.bsize/2),self.bsize/2)
         self.rect = pygame.Rect(screenRect.center,self.image.get_rect().size)
         self.moveV = pygame.math.Vector2((self.speed,self.speed))
+        self.pos = pygame.math.Vector2(self.rect.topleft)
         self.limit = brett.rect.top
         self.lost = False
         self.brett = brett
     def update(self, gameContext):
         if gameContext["gameState"]==1:
             return
-        self.rect.move_ip(self.moveV)
-        if (self.rect.x<0 and self.moveV.x<0) or (self.rect.right>screenRect.width and self.moveV.x>0):
+        self.pos = self.pos + self.moveV
+        if (self.pos.x<=0 and self.moveV.x<0):
+            tx = self.pos.x/self.moveV.x
+            self.pos = self.pos - self.moveV * tx
             self.moveV.x = -self.moveV.x
-        if self.rect.y<0:
+            self.pos = self.pos + self.moveV * tx
+        elif (self.pos.x+self.rect.width>=screenRect.width and self.moveV.x>0):
+            tx = (self.pos.x+self.rect.width-screenRect.width)/self.moveV.x
+            self.pos = self.pos - self.moveV * tx
+            self.moveV.x = -self.moveV.x
+            self.pos = self.pos + self.moveV * tx
+        if self.pos.y<=0 and self.moveV.y<0:
+            ty = self.pos.y/self.moveV.y
+            self.pos = self.pos - self.moveV * ty
             self.moveV.y = -self.moveV.y
-        elif self.rect.bottom>self.limit:
-            if self.rect.x+self.bsize/2<self.brett.rect.x or self.rect.right-self.bsize/2>self.brett.rect.right:
+            self.pos = self.pos + self.moveV * ty
+        elif self.pos.y+self.rect.height>=self.limit and self.moveV.y>0:
+            if self.pos.x+self.bsize/2<self.brett.rect.x or self.pos.x+self.rect.width-self.bsize/2>self.brett.rect.right:
                 self.lost = True
             else:
+                ty = (self.pos.y+self.rect.height-self.limit)/self.moveV.y
+                self.pos = self.pos - self.moveV * ty
                 self.moveV.y = -self.moveV.y
-                m = (self.rect.centerx-self.brett.rect.centerx)/(self.brett.rect.width/2)
+                self.pos = self.pos + self.moveV * ty
+                m = (self.pos.x+self.rect.width/2-self.brett.rect.centerx)/(self.brett.rect.width/2)
                 if abs(m)>0.5:
                     #print(f"rotate {m}")
                     self.moveV.rotate_rad_ip(math.sqrt(abs(m))*(1 if m>0 else -1))
+        self.rect.topleft = self.pos
     def reset(self):
-        self.rect.center = screenRect.center
+        self.pos.x = screenRect.centerx
+        self.pos.y = screenRect.centery
         self.lost = False
         self.moveV.x = self.speed
         self.moveV.y = self.speed
@@ -84,7 +103,7 @@ class Tile(pygame.sprite.Sprite):
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode(screenRect.size)
+    screen = pygame.display.set_mode(screenRect.size, pygame.DOUBLEBUF)
     pygame.display.set_caption('Ping')
     running = True
     brett = Brett()
@@ -102,7 +121,7 @@ def main():
     }
     tiles = []
     lblGameOver = Label(gameContext,"GAME OVER")
-    tilesMaxButton = 0;
+    tilesMaxButton = 0
     for x in range(0,Tile.columns):
         for y in range(0,Tile.rows):
             tile = Tile(x,y)
@@ -125,6 +144,7 @@ def main():
                 gameContext["gameState"] = 0
                 lblGameOver.kill()
                 ball.reset()
+                brett.reset()
                 tilesCount = tilesMaxCount
                 for tile in tiles:
                     group.add(tile)
@@ -146,7 +166,7 @@ def main():
                 ball.speedUp()
         group.draw(screen)
         pygame.display.flip()
-        clock.tick(50)
+        clock.tick(30)
 
 if __name__ == "__main__":
     main()
