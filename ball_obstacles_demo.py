@@ -125,7 +125,7 @@ def main():
     screen = pygame.display.set_mode(screenRect.size, pygame.DOUBLEBUF)
     pygame.display.set_caption('Balls Obstacles Demo')
     running = True
-    backgroundSurface = pygame.Surface(screenRect.size,pygame.SRCALPHA)
+    backgroundSurface = pygame.Surface(screenRect.size)
     obstacles = []
     obstacles.append(RectObstacle((100,100),(100,50)))
     obstacles.append(RectObstacle((200,300),(80,70)))
@@ -147,7 +147,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-        screen.fill(backgroundColor)
         screen.blit(backgroundSurface,(0,0))
         #mousePos = pygame.mouse.get_pos()
         #balls[0].pos.x = mousePos[0]
