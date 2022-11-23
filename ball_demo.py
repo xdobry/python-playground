@@ -1,5 +1,4 @@
 import pygame
-import math
 
 screenRect = pygame.Rect((0,0,400,400))
 objectColor = pygame.Color(255, 255, 255)
