@@ -16,7 +16,9 @@ class Strip:
     def draw(self,textSource,screen):
         startX = 0 if self.pos<self.height else self.pos-self.height
         h = self.pos if self.pos<self.height else self.height
-        screen.blit(textSource,(self.column*self.charSize[0],startX),pygame.rect.Rect(self.column*self.charSize[0],startX,self.charSize[0],h))
+        screen.blit(textSource.textSource,(self.column*self.charSize[0],startX),pygame.rect.Rect(self.column*self.charSize[0],startX,self.charSize[0],h))
+        if self.pos<screenRect.height:
+            screen.blit(textSource.textSource,(self.column*self.charSize[0],self.pos-self.charSize[1]),pygame.rect.Rect(self.column*self.charSize[0],self.pos-self.charSize[1],self.charSize[0],self.charSize[1]),special_flags=pygame.BLEND_RGBA_ADD)
     def update(self,textSource):
         self.pos += 8
         if self.pos>screenRect.height+self.height:
@@ -27,6 +29,8 @@ class Strip:
 class TextSource:
     def __init__(self,screen):
         self.textSource = pygame.Surface((screen.get_width(),screen.get_height()))
+        self.textSource2 = pygame.Surface((screen.get_width(),screen.get_height()))
+        self.textSource3 = pygame.Surface((screen.get_width(),screen.get_height()))
         font = pygame.font.SysFont("mono",32, bold=True)
         self.characters = [font.render(chr(c), True, matrixColor) for c in range(ord("A"),ord("Z")+1)]
         self.charSize = (self.characters[0].get_width(),self.characters[0].get_height()-4)
@@ -34,19 +38,22 @@ class TextSource:
         for x in range(0,self.posSize[0]):
             for y in range(0,self.posSize[1]):
                 if random.random()>0.2:
-                    self.textSource.blit(self.characters[random.randint(0,len(self.characters)-1)],(x*self.charSize[0],y*self.charSize[1]))
+                    self.blitChar(x,y,random.randint(0,len(self.characters)-1))
+    def blitChar(self,x,y,char):
+        self.textSource.blit(self.characters[char],(x*self.charSize[0],y*self.charSize[1]))
     def update(self):
         for i in range(0,5):
             rx = random.randint(0,self.posSize[0])
             ry = random.randint(0,self.posSize[1])
             self.textSource.fill(backgroundColor,pygame.rect.Rect(self.charSize[0]*rx,self.charSize[1]*ry,self.charSize[0],self.charSize[1]))
             if random.random()>0.2:
-                self.textSource.blit(self.characters[random.randint(0,len(self.characters)-1)],(rx*self.charSize[0],ry*self.charSize[1]))        
+                char = random.randint(0,len(self.characters)-1)
+                self.blitChar(rx,ry,char)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode(screenRect.size, pygame.DOUBLEBUF)
-    pygame.display.set_caption('Balls Obstacles Demo')
+    pygame.display.set_caption('Matrix Falling Code')
     running = True
     clock = pygame.time.Clock()
     counter = 0
@@ -66,7 +73,7 @@ def main():
                 strips.append(Strip(random.randint(0,textSource.posSize[0]),random.randint(8,15),textSource.charSize))
         for strip in strips:
             strip.update(textSource)
-            strip.draw(textSource.textSource,screen)
+            strip.draw(textSource,screen)
         pygame.display.flip()
         clock.tick(40)
         counter+=1
