@@ -1,6 +1,5 @@
 import pygame
 import random
-import math
 
 screenRect = pygame.Rect((0,0,800,600))
 matrixColor = pygame.Color(3, 160, 98)
@@ -29,8 +28,6 @@ class Strip:
 class TextSource:
     def __init__(self,screen):
         self.textSource = pygame.Surface((screen.get_width(),screen.get_height()))
-        self.textSource2 = pygame.Surface((screen.get_width(),screen.get_height()))
-        self.textSource3 = pygame.Surface((screen.get_width(),screen.get_height()))
         font = pygame.font.SysFont("mono",32, bold=True)
         self.characters = [font.render(chr(c), True, matrixColor) for c in range(ord("A"),ord("Z")+1)]
         self.charSize = (self.characters[0].get_width(),self.characters[0].get_height()-4)
