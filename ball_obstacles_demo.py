@@ -24,13 +24,13 @@ class Ball(pygame.sprite.Sprite):
         self.moveV = pygame.math.Vector2(move)
         self.pos = pygame.math.Vector2(self.rect.topleft)
         self.rect.center = self.pos
-        self.hasCollision = False
+        self.hasCollisionWith = []
     def tryCollision(self,ball):
         global stop
         distS = self.pos.distance_squared_to(ball.pos) 
         if distS<self.rsize2s:
-            if not self.hasCollision:
-                tangente = ball.pos - self.pos 
+            if ball not in self.hasCollisionWith:
+                tangente = ball.pos - self.pos
                 tangenteOrtho = pygame.math.Vector2(tangente.y,-tangente.x)
                 selfTProj = self.moveV.project(tangente)
                 selfTOProj = self.moveV.project(tangenteOrtho)
@@ -38,9 +38,10 @@ class Ball(pygame.sprite.Sprite):
                 ballTOProj = ball.moveV.project(tangenteOrtho)
                 self.moveV = ballTProj + selfTOProj
                 ball.moveV = selfTProj + ballTOProj
-                self.hasCollision = True
+                self.hasCollisionWith.append(ball)
         else:
-            self.hasCollision = False
+            if ball in self.hasCollisionWith:
+                self.hasCollisionWith.remove(ball)
     def tryObstacle(self,obstacle):
         global stop
         if self.rect.colliderect(obstacle.rect):
@@ -70,24 +71,29 @@ class Ball(pygame.sprite.Sprite):
                             dir = 2
                 if dir==0:
                     ty = (self.rect.bottom-obstacle.rect.top)/self.moveV.y
+                    #print(f"dir {dir} ty {ty}")
                     self.pos = self.pos - self.moveV * ty
                     self.moveV.y = -self.moveV.y
                     self.pos = self.pos + self.moveV * ty                    
                 elif dir==1:
                     tx = (self.rect.left-obstacle.rect.right)/self.moveV.x
+                    #print(f"dir {dir} ty {tx}")
                     self.pos = self.pos - self.moveV * tx
                     self.moveV.x = -self.moveV.x
                     self.pos = self.pos + self.moveV * tx                    
                 elif dir==2:
                     ty = (self.rect.top-obstacle.rect.bottom)/self.moveV.y
+                    #print(f"dir {dir} ty {ty}")
                     self.pos = self.pos - self.moveV * ty
                     self.moveV.y = -self.moveV.y
                     self.pos = self.pos + self.moveV * ty                    
                 elif dir==3:
                     tx = (self.rect.right-obstacle.rect.left)/self.moveV.x
+                    #print(f"dir {dir} ty {tx}")
                     self.pos = self.pos - self.moveV * tx
                     self.moveV.x = -self.moveV.x
-                    self.pos = self.pos + self.moveV * tx                    
+                    self.pos = self.pos + self.moveV * tx
+                self.rect.center = self.pos                   
             else:
                 # corner collision
                 if self.rect.centerx>obstacle.rect.centerx:
@@ -103,6 +109,12 @@ class Ball(pygame.sprite.Sprite):
                 corner = pygame.math.Vector2(corner)
                 r = corner.distance_to(self.pos)
                 if r<self.rsize:
+                    pos0 = self.pos - self.moveV
+                    r0 = corner.distance_to(pos0)
+                    t = (self.rsize-r)/(r0-r)
+                    pos1 = self.pos-t*self.moveV
+                    r1 = corner.distance_to(pos1)
+                    print(f"r {r} r0 {r0} t={t} r1={r1}")
                     tangente = pygame.math.Vector2(self.pos.x-corner.x,self.pos.y-corner.y)
                     self.moveV.reflect_ip(tangente)
                 
@@ -110,27 +122,30 @@ class Ball(pygame.sprite.Sprite):
     def update(self):
         self.pos = self.pos + self.moveV
         if (self.pos.x<=self.rsize and self.moveV.x<0):
-            tx = (self.rsize-self.pos.x)/self.moveV.x
+            tx = -(self.rsize-self.pos.x)/self.moveV.x
             self.pos = self.pos - self.moveV * tx
             self.moveV.x = -self.moveV.x
             self.pos = self.pos + self.moveV * tx
+            #print(f"rc 0 tx {tx} {self.pos}")
         elif (self.pos.x+self.rsize)>=screenRect.width and self.moveV.x>0:
             tx = (self.pos.x+self.rsize-screenRect.width)/self.moveV.x
             self.pos = self.pos - self.moveV * tx
             self.moveV.x = -self.moveV.x
             self.pos = self.pos + self.moveV * tx
+            #print(f"rc 1 tx {tx} {self.pos}")
         if self.pos.y<=self.rsize and self.moveV.y<0:
-            ty = (self.rsize-self.pos.y)/self.moveV.y
+            ty = -(self.rsize-self.pos.y)/self.moveV.y
             self.pos = self.pos - self.moveV * ty
             self.moveV.y = -self.moveV.y
             self.pos = self.pos + self.moveV * ty
+            #print(f"rc 2 ty {ty} {self.pos}")
         elif self.pos.y+self.rsize>=screenRect.height and self.moveV.y>0:
             ty = (self.pos.y+self.rsize-screenRect.height)/self.moveV.y
             self.pos = self.pos - self.moveV * ty
             self.moveV.y = -self.moveV.y
             self.pos = self.pos + self.moveV * ty
+            #print(f"rc 3 ty {ty} {self.pos}")
         self.rect.center = self.pos
-    
 
 def main():
     pygame.init()
@@ -170,8 +185,8 @@ def main():
                     ball.tryObstacle(obstacle)
                 for ball2 in balls[idx+1:]:
                     ball.tryCollision(ball2)
-            group.draw(screen)
-            pygame.display.flip()
+        group.draw(screen)
+        pygame.display.flip()
         clock.tick(50)
 
 if __name__ == "__main__":
