@@ -69,13 +69,25 @@ class Ball(pygame.sprite.Sprite):
                         else:
                             dir = 2
                 if dir==0:
+                    ty = (self.rect.bottom-obstacle.rect.top)/self.moveV.y
+                    self.pos = self.pos - self.moveV * ty
                     self.moveV.y = -self.moveV.y
+                    self.pos = self.pos + self.moveV * ty                    
                 elif dir==1:
+                    tx = (self.rect.left-obstacle.rect.right)/self.moveV.x
+                    self.pos = self.pos - self.moveV * tx
                     self.moveV.x = -self.moveV.x
+                    self.pos = self.pos + self.moveV * tx                    
                 elif dir==2:
+                    ty = (self.rect.top-obstacle.rect.bottom)/self.moveV.y
+                    self.pos = self.pos - self.moveV * ty
                     self.moveV.y = -self.moveV.y
+                    self.pos = self.pos + self.moveV * ty                    
                 elif dir==3:
+                    tx = (self.rect.right-obstacle.rect.left)/self.moveV.x
+                    self.pos = self.pos - self.moveV * tx
                     self.moveV.x = -self.moveV.x
+                    self.pos = self.pos + self.moveV * tx                    
             else:
                 # corner collision
                 if self.rect.centerx>obstacle.rect.centerx:
