@@ -27,6 +27,7 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
+__pycache__
 
 ### VS Code ###
 .vscode/
