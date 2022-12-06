@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+from demo_base import Demo, Scene
 
 screenRect = pygame.Rect((0,0,800,600))
 objectColor = pygame.Color(255, 255, 255)

@@ -1,7 +1,7 @@
 import pygame
 import random
+from demo_base import Demo, Scene
 
-screenRect = pygame.Rect((0,0,600,600))
 objectColor = pygame.Color(255, 255, 255)
 
 message = "** PARTICELS FALL **"
@@ -36,7 +36,7 @@ class Particle:
                 self.pos += self.move
                 self.live -= 1
 
-def createParticles(surface):
+def createParticles(surface,screenRect):
     particles = []
     size = surface.get_size()
     maxy = [0 for i in range(0,size[0])]
@@ -48,40 +48,32 @@ def createParticles(surface):
                 maxy[x] = y
     return particles, maxy
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode(screenRect.size, pygame.DOUBLEBUF)
-    pygame.display.set_caption('Balls Obstacles Demo')
-    running = True
+class TextFallScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
-    clock = pygame.time.Clock()
-    counter = 0
-    font = pygame.font.SysFont("mono",42)
-    textSurface = font.render(message, True, objectColor)
-    textSurface2 = pygame.Surface((textSurface.get_width(),textSurface.get_height()))
-    textSurface2.blit(textSurface,(0,0))
-    particles, maxy = createParticles(textSurface2)
-    
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                running = False
-        if counter>50:
+    def __init__(self,demo):
+        Scene.__init__(self,demo)
+        font = pygame.font.SysFont("mono",42)
+        textSurface = font.render(message, True, objectColor)
+        textSurface2 = pygame.Surface((textSurface.get_width(),textSurface.get_height()))
+        textSurface2.blit(textSurface,(0,0))
+        self.particles, self.maxy = createParticles(textSurface2,demo.screenRect)
+    def update(self,demo,counter):
+         if counter>50:
             if counter%5==0:
-                for i in range(0,len(maxy)):
-                    if maxy[i]>0:
-                        maxy[i] -= 1
-            for particle in particles:
-                particle.update(maxy)
-        screen.fill(backgroundColor)
-        for particle in particles:
-            particle.draw(screen)
-        pygame.display.flip()
-        clock.tick(20)
-        counter+=1
-        if any([p.live==0 for p in particles]):
-            running = False
+                for i in range(0,len(self.maxy)):
+                    if self.maxy[i]>0:
+                        self.maxy[i] -= 1
+            for particle in self.particles:
+                particle.update(self.maxy)
+    def draw(self,demo):
+        demo.screen.fill(self.backgroundColor)
+        for particle in self.particles:
+            particle.draw(demo.screen)
+    def isRunning(self,counter):
+        return not any([p.live==0 for p in self.particles])
 
 if __name__ == "__main__":
-    main()
+    demo = Demo("Space",(600,600),20)
+    TextFallScene(demo)
+    demo.start()
     pygame.quit()
