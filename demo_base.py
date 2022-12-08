@@ -9,6 +9,8 @@ class Scene:
         None
     def draw(self,demo):
         None
+    def reset(self,demo):
+        None
     def isRunning(self,counter):
         return True
 
@@ -20,13 +22,12 @@ class Demo:
         self.scenes = []
         self.currentScene = None
         self.clock = clock
-        None
+        self.screen = pygame.display.set_mode(self.screenRect.size, pygame.DOUBLEBUF)
+        pygame.display.set_caption(self.title)
     def addScene(self,scene):
         self.scenes.append(scene)
         self.currentScene = scene  
     def start(self):
-        self.screen = pygame.display.set_mode(self.screenRect.size, pygame.DOUBLEBUF)
-        pygame.display.set_caption(self.title)
         clock = pygame.time.Clock()
         running = True
         counter = 0

@@ -1,16 +1,8 @@
 from distutils import core
+from color_utils import genColors
 import pygame
 import math
 from demo_base import Demo, Scene
-
-def genColors(startColor,endColor,steps):
-    colors = []
-    startV = pygame.math.Vector3(startColor.r,startColor.g,startColor.b)
-    endV = pygame.math.Vector3(endColor.r,endColor.g,endColor.b)
-    for s in range(0,steps):
-        colorV = startV.lerp(endV,s/steps)
-        colors.append(pygame.Color(int(colorV.x),int(colorV.y),int(colorV.z)))
-    return colors
 
 def genSurfaces(colors,size):
     surfaces = []

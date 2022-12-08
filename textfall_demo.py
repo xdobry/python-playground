@@ -53,9 +53,9 @@ class TextFallScene(Scene):
         Scene.__init__(self,demo)
         font = pygame.font.SysFont("mono",42)
         textSurface = font.render(message, True, objectColor)
-        textSurface2 = pygame.Surface((textSurface.get_width(),textSurface.get_height()))
-        textSurface2.blit(textSurface,(0,0))
-        self.particles = createParticles(textSurface2,demo.screenRect)
+        self.textSurface2 = pygame.Surface((textSurface.get_width(),textSurface.get_height()))
+        self.textSurface2.blit(textSurface,(0,0))
+        self.reset(demo)
     def update(self,demo,counter):
         if counter>50:
             for particle in self.particles:
@@ -64,6 +64,8 @@ class TextFallScene(Scene):
         demo.screen.fill(self.backgroundColor)
         for particle in self.particles:
             particle.draw(demo.screen)
+    def reset(self,demo):
+        self.particles = createParticles(self.textSurface2,demo.screenRect)
     def isRunning(self,counter):
         return not any([p.live==0 for p in self.particles])
 

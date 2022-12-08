@@ -1,10 +1,10 @@
 import pygame
 import random
+from demo_base import Demo, Scene
 
 screenRect = pygame.Rect((0,0,800,600))
 matrixColor = pygame.Color(3, 160, 98)
 backgroundColor = pygame.Color((0,0,0))
-
 
 class Strip:
     def __init__(self,column,rows,charSize):
@@ -47,34 +47,27 @@ class TextSource:
                 char = random.randint(0,len(self.characters)-1)
                 self.blitChar(rx,ry,char)
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode(screenRect.size, pygame.DOUBLEBUF)
-    pygame.display.set_caption('Matrix Falling Code')
-    running = True
-    clock = pygame.time.Clock()
-    counter = 0
-    strips = []
-    textSource = TextSource(screen)
-    for i in range(0,2):
-        strips.append(Strip(random.randint(0,textSource.posSize[0]),random.randint(8,10),textSource.charSize))
-    
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                running = False
-        screen.fill(backgroundColor)
-        textSource.update()
-        if len(strips)<15:
+class MatrixScene(Scene):
+    def __init__(self,demo):
+        Scene.__init__(self,demo)
+        self.strips = []
+        self.textSource = TextSource(demo.screen)
+        for i in range(0,2):
+            self.strips.append(Strip(random.randint(0,self.textSource.posSize[0]),random.randint(8,10),self.textSource.charSize))
+    def update(self,demo,counter):
+        self.textSource.update()
+        if len(self.strips)<15:
             if random.random()<0.01:
-                strips.append(Strip(random.randint(0,textSource.posSize[0]),random.randint(8,15),textSource.charSize))
-        for strip in strips:
-            strip.update(textSource)
-            strip.draw(textSource,screen)
-        pygame.display.flip()
-        clock.tick(40)
-        counter+=1
+                self.strips.append(Strip(random.randint(0,self.textSource.posSize[0]),random.randint(8,15),self.textSource.charSize))
+        for strip in self.strips:
+            strip.update(self.textSource)
+    def draw(self,demo):
+        demo.screen.fill(backgroundColor)
+        for strip in self.strips:
+            strip.draw(self.textSource,demo.screen)
 
 if __name__ == "__main__":
-    main()
+    demo = Demo("Matrix",(800,600),20)
+    MatrixScene(demo)
+    demo.start()
     pygame.quit()

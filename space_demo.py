@@ -13,8 +13,8 @@ class Star:
         global colors
         if self.pos.z>100:
             # https://ogldev.org/www/tutorial12/tutorial12.html
-            x2 = int(self.pos.x/self.pos.z*150+400)
-            y2 = int(self.pos.y/self.pos.z*150+400)
+            x2 = int(self.pos.x/self.pos.z*150+surface.get_width()/2)
+            y2 = int(self.pos.y/self.pos.z*150+surface.get_height()/2)
             if x2>0 and x2<800 and y2>0 and y2<800:
                 r = 255-int(self.pos.z/800*255)
                 surface.set_at((x2,y2),self.colors[r])
@@ -41,7 +41,7 @@ class StarScene(Scene):
             star.draw(demo.screen)
 
 if __name__ == "__main__":
-    demo = Demo("Space",(800,600),20)
+    demo = Demo("Space",(800,600),40)
     StarScene(demo)
     demo.start()
     pygame.quit()

@@ -1,48 +1,30 @@
 import pygame
 import math
-import random
+from demo_base import Demo, Scene
 
-screenRect = pygame.Rect((0,0,800,600))
-objectColor = pygame.Color(255, 255, 255)
-emptyColor = pygame.Color(0,0,0,0)
-colorWite = pygame.Color(255,255,255)
-
-def main():
-    pygame.init()
-    pygame.font.init()
-    screen = pygame.display.set_mode(screenRect.size)
-    pygame.display.set_caption('dots demo')
-    running = True
+class DotsScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
-    clock = pygame.time.Clock()
-    dotsCount = 20
-    counter = 0
-    orbitRList = [250,50,125]
-    orbitSpeedList = [50,30,-30]
-    colors = [pygame.color.Color((255-(5*x),255-(5*x),255-(5*x))) for x in range(0,dotsCount)]
-    #for ci in range(0,3):
-    #    orbitRList.append(random.randint(50,200))
-    #    orbitSpeedList.append(random.randint(20,100)*(1 if random.randint(0,1) == 0 else -1))
-    
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                running = False
-        counter += 1
-        screen.fill(backgroundColor)
-
-        for p in range(0,len(orbitRList)):
-            for pointNum in range(0,dotsCount):
-                posX = screenRect.centerx
-                posY = screenRect.centery
-                for orbitR, orbitSpeed in zip(orbitRList,orbitSpeedList):
-                    posX += orbitR*math.cos((counter+(pointNum*13))/orbitSpeed)*(p+1)/len(orbitRList)
-                    posY += orbitR*math.sin((counter+(pointNum*13))/orbitSpeed)*(p+1)/len(orbitRList)
-                pygame.draw.rect(screen,colors[dotsCount-pointNum-1],pygame.rect.Rect(posX,posY,4,4))
-
-        pygame.display.flip()
-        clock.tick(50)
+    def __init__(self,demo):
+        Scene.__init__(self,demo)
+        self.dotsCount = 20
+        self.orbitRList = [250,50,125]
+        self.orbitSpeedList = [50,30,-30]
+        self.colors = [pygame.color.Color((255-(5*x),255-(5*x),255-(5*x))) for x in range(0,self.dotsCount)]
+    def update(self,demo,counter):
+        self.counter = counter
+    def draw(self,demo):
+        demo.screen.fill(self.backgroundColor)
+        for p in range(0,len(self.orbitRList)):
+            for pointNum in range(0,self.dotsCount):
+                posX = demo.screenRect.centerx
+                posY = demo.screenRect.centery
+                for orbitR, orbitSpeed in zip(self.orbitRList,self.orbitSpeedList):
+                    posX += orbitR*math.cos((self.counter+(pointNum*13))/orbitSpeed)*(p+1)/len(self.orbitRList)
+                    posY += orbitR*math.sin((self.counter+(pointNum*13))/orbitSpeed)*(p+1)/len(self.orbitRList)
+                pygame.draw.rect(demo.screen,self.colors[self.dotsCount-pointNum-1],pygame.rect.Rect(posX,posY,4,4))
 
 if __name__ == "__main__":
-    main()
+    demo = Demo("Dots",(800,600),40)
+    DotsScene(demo)
+    demo.start()
     pygame.quit()
