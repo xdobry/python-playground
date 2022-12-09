@@ -16,6 +16,8 @@ import ball_demo
 import ball_obstacles_demo
 import colorblend_demo
 import pygame_circles
+import matrix2dTrans_demo
+import textdots_demo
 
 class AllScenes(Scene):
     backgroundColor = pygame.Color((0,0,0))
@@ -37,6 +39,8 @@ class AllScenes(Scene):
             ball_obstacles_demo.BallScene(demo),
             colorblend_demo.BlendScene(demo),
             pygame_circles.CirclesScene(demo),
+            matrix2dTrans_demo.DotsPlaneScene(demo),
+            textdots_demo.DotsPlaneScene(demo),
         ]
         self.currentSceneIndex = 0
         self.currentScene = self.scenes[self.currentSceneIndex]

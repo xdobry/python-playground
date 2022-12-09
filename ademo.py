@@ -13,6 +13,7 @@ class AScene(Scene):
         pygame.font.init()
         font = pygame.font.SysFont("mono", 24,bold=True)
         self.msgImages = [font.render(c, True, self.colorWite) for c in list(message)]
+        self.pressSpaceMsg = font.render("PRESS SPACE FOR NEXT DEMO",True, pygame.color.Color(120,80,0))
         self.backGround = pygame.surface.Surface((demo.screenRect.width,100))
         vStart = pygame.Vector3((255,20,0))
         vEnd = pygame.Vector3((10,0,255))
@@ -33,6 +34,8 @@ class AScene(Scene):
     def draw(self,demo):
         demo.screen.fill(self.backgroundColor)
         demo.screen.blit(self.backGround,(0,self.msgY-self.backGround.get_height()/2+12))
+        self.pressSpaceMsg.set_alpha(int(abs(math.sin(self.counter/50))*255))
+        demo.screen.blit(self.pressSpaceMsg,(demo.screenRect.centerx-self.pressSpaceMsg.get_width()/2,demo.screenRect.height-self.pressSpaceMsg.get_height()-10))
         posX = self.counter % (demo.screenRect.width+len(message)*14)
         for idx,img in enumerate(self.msgImages):
             demo.screen.blit(img,((demo.screenRect.width-posX)+idx*14,self.msgY+math.sin((posX+idx*3)/20)*20))

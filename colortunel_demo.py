@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 import random
 from demo_base import Demo, Scene
@@ -40,7 +39,7 @@ class ColorTunelScene(Scene):
         demo.screen.blit(self.subSurface,(0,0),special_flags=pygame.BLEND_RGBA_SUB)
 
 if __name__ == "__main__":
-    demo = Demo("Space",(800,800),10)
+    demo = Demo("Space",(800,800),40)
     ColorTunelScene(demo)
     demo.start()
     pygame.quit()
