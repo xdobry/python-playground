@@ -14,3 +14,10 @@ You need to install pygame and numpy first
 Start all demos using.
 
     python START_ALL_DEMOS.py
+
+## Open Ideas
+
+ * Use Perlin Noise
+ * Use numpy and 3d dot graphics, projection matrix
+ * Use simple line 3d graphic (extract from svg)
+ * Try processing like, matrix push pop approach
