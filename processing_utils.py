@@ -7,9 +7,12 @@ class Processing:
         self.screen = screen
         self.color = pygame.color.Color(255,255,255)
         self.m = TransMatrix2D()
-    def line(self,fromPos,toPos):
+    def line(self,fromPos,toPos,width=1):
         transPoints = self.transPoints([fromPos,toPos])
-        pygame.draw.line(self.screen,self.color,transPoints[0],transPoints[1])
+        pygame.draw.line(self.screen,self.color,transPoints[0],transPoints[1],width)
+    def circle(self,pos,size):
+        transPoints = self.transPoints([pos])
+        pygame.draw.circle(self.screen,self.color,transPoints[0],size)
     def transPoint(self,pos):
         point = numpy.array([pos[0],pos[1],1],dtype=float)
         pointTrans = self.m.m @ point

@@ -3,7 +3,7 @@ import pygame
 import numpy
 import math
 from demo_base import Demo, Scene
-from tmatrix_util import TransMatrix2D
+from tmatrix_util import TransMatrix2D,map
 
 def text2dots(text,font):
     textSurface = font.render(text, True, pygame.color.Color(255,255,255))
@@ -17,9 +17,6 @@ def text2dots(text,font):
             if col.r>0:
                 particles.append([x,y])
     return numpy.column_stack((numpy.array(particles),numpy.ones(len(particles)))), textSurface2.get_size()
-
-def map(x,sourceFrom,sourceTo,targetFrom,targetTo):
-    return targetFrom+(x-sourceFrom)*(targetTo-targetFrom)/(sourceTo-sourceFrom)
 
 class DotsPlaneScene(Scene):
     title = "Text to Dots"

@@ -20,6 +20,7 @@ import pygame_circles
 import matrix2dTrans_demo
 import textdots_demo
 import processing_demo
+import tree_demo
 
 class AllScenes(Scene):
     backgroundColor = pygame.Color((0,0,0))
@@ -44,6 +45,7 @@ class AllScenes(Scene):
             matrix2dTrans_demo.DotsPlaneScene(demo),
             textdots_demo.DotsPlaneScene(demo),
             processing_demo.ProcessingScene(demo),
+            tree_demo.TreeScene(demo),
         ]
         self.currentSceneIndex = 0
         self.currentScene = self.scenes[self.currentSceneIndex]

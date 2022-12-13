@@ -37,3 +37,6 @@ class TransMatrix2D:
         t[0,1] = v[0]
         t[1,0] = v[1]
         self.m = self.m @ t
+
+def map(x,sourceFrom,sourceTo,targetFrom,targetTo):
+    return targetFrom+(x-sourceFrom)*(targetTo-targetFrom)/(sourceTo-sourceFrom)

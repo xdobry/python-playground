@@ -1,9 +1,7 @@
 from random import randint
 import pygame
-import numpy
 import math
 from demo_base import Demo, Scene
-from tmatrix_util import TransMatrix2D
 from processing_utils import Processing
 
 # use generic programing like processing to paint
