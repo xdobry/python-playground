@@ -26,6 +26,8 @@ class Star:
             self.pos.x = random.randint(-800,800)
 
 class StarScene(Scene):
+    title = "Stars"
+    description = "classic star field effect with depth dependend color bright - press mouse button to brake light speed!"
     backgroundColor = pygame.Color((0,0,0))
     def __init__(self,demo):
         Scene.__init__(self,demo)
@@ -36,7 +38,8 @@ class StarScene(Scene):
         for star in self.stars:
             star.update()
     def draw(self,demo):
-        demo.screen.fill(self.backgroundColor)
+        if not pygame.mouse.get_pressed()[0]:
+            demo.screen.fill(self.backgroundColor)
         for star in self.stars:
             star.draw(demo.screen)
 

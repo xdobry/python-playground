@@ -3,6 +3,8 @@ import math
 from demo_base import Demo, Scene
 
 class WaterDotScene(Scene):
+    title = "dots waves demo"
+    description = "use sin rect movement to create waves"
     backgroundColor = pygame.Color((0,0,0))
     objectColor = pygame.Color(255, 255, 255)
     objectFixColor = pygame.Color(255, 0, 0)

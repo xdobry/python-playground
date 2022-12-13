@@ -8,11 +8,15 @@ message = "WELCOME TO PYGAME REIMPLEMENTATION OF SOME RETRO DEMOS FROM 80s and 9
 class AScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
+    title = 'Intro'
     def __init__(self,demo):
         Scene.__init__(self,demo)
         pygame.font.init()
         font = pygame.font.SysFont("mono", 24,bold=True)
-        self.msgImages = [font.render(c, True, self.colorWite) for c in list(message)]
+        self.msgImages = {}
+        for c in list(message):
+            if c not in self.msgImages:
+                self.msgImages[c] = font.render(c, True, self.colorWite)
         self.pressSpaceMsg = font.render("PRESS SPACE FOR NEXT DEMO",True, pygame.color.Color(120,80,0))
         self.backGround = pygame.surface.Surface((demo.screenRect.width,100))
         vStart = pygame.Vector3((255,20,0))
@@ -37,8 +41,8 @@ class AScene(Scene):
         self.pressSpaceMsg.set_alpha(int(abs(math.sin(self.counter/50))*255))
         demo.screen.blit(self.pressSpaceMsg,(demo.screenRect.centerx-self.pressSpaceMsg.get_width()/2,demo.screenRect.height-self.pressSpaceMsg.get_height()-10))
         posX = self.counter % (demo.screenRect.width+len(message)*14)
-        for idx,img in enumerate(self.msgImages):
-            demo.screen.blit(img,((demo.screenRect.width-posX)+idx*14,self.msgY+math.sin((posX+idx*3)/20)*20))
+        for idx,c in enumerate(list(message)):
+            demo.screen.blit(self.msgImages[c],((demo.screenRect.width-posX)+idx*14,self.msgY+math.sin((posX+idx*3)/20)*20))
         pointPos = []
         for point in self.points:
             posX = demo.screenRect.centerx

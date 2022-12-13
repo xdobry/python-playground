@@ -48,6 +48,8 @@ class TextSource:
                 self.blitChar(rx,ry,char)
 
 class MatrixScene(Scene):
+    title = "Matrix falling code"
+    description = "not so retro effect but cool to reimplement it "
     def __init__(self,demo):
         Scene.__init__(self,demo)
         self.strips = []

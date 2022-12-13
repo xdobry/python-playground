@@ -19,6 +19,8 @@ def genPlane(colx,coly,d):
     return numpy.fromfunction(genFun,(colx*coly,2),dtype=float)
 
 class DotsPlaneScene(Scene):
+    title = "dots plane transformation"
+    description = "use numpy and 2d transformation matrix"
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
     dotGap = 10

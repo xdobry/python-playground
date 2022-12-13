@@ -4,6 +4,8 @@ import random
 from demo_base import Demo, Scene
 
 class CirclesScene(Scene):
+    title = "moving cycles"
+    description = "use epycicles, sin on size and random"
     backgroundColor = pygame.Color((0,0,0))
     emptyColor = pygame.Color(0,0,0,0)
     def __init__(self,demo):

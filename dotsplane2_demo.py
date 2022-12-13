@@ -4,6 +4,8 @@ from demo_base import Demo, Scene
 
 
 class DotsPlaneScene(Scene):
+    title = "moving dots plane"
+    description = "use sin to create moving patterns on dots plane"
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
     dotGap = 10

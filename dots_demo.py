@@ -3,6 +3,8 @@ import math
 from demo_base import Demo, Scene
 
 class DotsScene(Scene):
+    title = "dots circles"
+    description = "use 3 circles to compute epicycles based movement"
     backgroundColor = pygame.Color((0,0,0))
     def __init__(self,demo):
         Scene.__init__(self,demo)

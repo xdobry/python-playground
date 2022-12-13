@@ -49,6 +49,8 @@ class Line:
 
 class LinesScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
+    title = "moving lines"
+    description = "very simple but effective"
     def __init__(self,demo):
         Scene.__init__(self,demo)
         Line.screenRect = demo.screenRect

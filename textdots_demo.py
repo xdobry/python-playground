@@ -22,6 +22,8 @@ def map(x,sourceFrom,sourceTo,targetFrom,targetTo):
     return targetFrom+(x-sourceFrom)*(targetTo-targetFrom)/(sourceTo-sourceFrom)
 
 class DotsPlaneScene(Scene):
+    title = "Text to Dots"
+    description = "transfer text to dots and do some matrix transformation"
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
     dotGap = 10
@@ -39,6 +41,8 @@ class DotsPlaneScene(Scene):
         if self.counterDiff==0:
             self.counterDiff = counter
         self.counter = counter-self.counterDiff
+    def reset(self,demo):
+        self.counterDiff = 0
     def drawDots(self,demo):
         # we use matrix dot multiplication to compute all positions in one run
         for dot in self.dots.dot(self.m.m.T):

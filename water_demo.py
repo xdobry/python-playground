@@ -19,6 +19,8 @@ def genSurfaces(colors,size):
     return surfaces
 
 class WaterScene(Scene):
+    title = "color waves demo"
+    description = "use sin rect movement and apha drawing to create waves"
     backgroundColor = pygame.Color((0,0,0))
     objectColor = pygame.Color(255, 255, 255)
     objectFixColor = pygame.Color(255, 0, 0)

@@ -20,6 +20,8 @@ class Circle:
             self.reset()
 
 class ColorTunelScene(Scene):
+    title = "color tunel"
+    description = "use blend modes to mode circles in diffent colors"
     backgroundColor = pygame.Color((0,0,0,0))
     def __init__(self,demo):
         Scene.__init__(self,demo)

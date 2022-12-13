@@ -6,6 +6,8 @@ from ball import Ball
 class BallScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
+    title = 'Ball Collision Demo'
+    description = "collision are accurate because exact collision possition is computed"
     def __init__(self,demo):
         Scene.__init__(self,demo)
         Ball.screenRect = demo.screenRect

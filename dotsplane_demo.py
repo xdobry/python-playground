@@ -2,6 +2,8 @@ import pygame
 from demo_base import Demo, Scene
 
 class DotsPlaneScene(Scene):
+    title = "dots plane magnet"
+    description = "use mouse and mouse button"
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
     dotGap = 10

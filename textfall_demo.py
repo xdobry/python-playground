@@ -49,15 +49,21 @@ def createParticles(surface,screenRect):
 
 class TextFallScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
+    title = "text particle"
+    description = "transfer text to particles"
     def __init__(self,demo):
         Scene.__init__(self,demo)
         font = pygame.font.SysFont("mono",42)
         textSurface = font.render(message, True, objectColor)
         self.textSurface2 = pygame.Surface((textSurface.get_width(),textSurface.get_height()))
         self.textSurface2.blit(textSurface,(0,0))
+        self.counterDiff=0
         self.reset(demo)
     def update(self,demo,counter):
-        if counter>50:
+        if self.counterDiff==0:
+            self.counterDiff = counter
+        self.counter = counter-self.counterDiff
+        if self.counter>50:
             for particle in self.particles:
                 particle.update(demo.screen)
     def draw(self,demo):

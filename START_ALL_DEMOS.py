@@ -1,3 +1,4 @@
+from telnetlib import RCP
 import pygame
 from demo_base import Demo, Scene
 import ademo
@@ -18,6 +19,7 @@ import colorblend_demo
 import pygame_circles
 import matrix2dTrans_demo
 import textdots_demo
+import processing_demo
 
 class AllScenes(Scene):
     backgroundColor = pygame.Color((0,0,0))
@@ -41,20 +43,50 @@ class AllScenes(Scene):
             pygame_circles.CirclesScene(demo),
             matrix2dTrans_demo.DotsPlaneScene(demo),
             textdots_demo.DotsPlaneScene(demo),
+            processing_demo.ProcessingScene(demo),
         ]
         self.currentSceneIndex = 0
         self.currentScene = self.scenes[self.currentSceneIndex]
+        font = pygame.font.SysFont("mono", 18,bold=True)
+        self.charImages = {}
+        self.descriptionPos = 0
+        self.descriptionFinished = False
+        for o in list(range(ord('A'),ord('Z')+1))+list(range(ord('0'),ord('9')+1))+[ord(c) for c in list(".,-!*")]:
+            c = chr(o)
+            if c not in self.charImages:
+                self.charImages[c] = font.render(c, True, pygame.Color(255,255,255))
         Scene.__init__(self,demo)
     def update(self,demo,counter):
         self.currentScene.update(demo,counter)
+        self.descriptionPos += 2
     def draw(self,demo):
         self.currentScene.draw(demo)
+        if not self.descriptionFinished and hasattr(self.currentScene,"description"):
+            demo.screen.fill(self.backgroundColor,pygame.rect.Rect(0,demo.screenRect.height-20,demo.screenRect.width,20))
+            cpos = 0
+            for c in list(self.currentScene.description.upper()):
+                if c==' ':
+                    cpos += 12
+                    continue
+                charImg = self.charImages[c]
+                rcPos = cpos-self.descriptionPos+demo.screenRect.width
+                if rcPos>demo.screenRect.width:
+                    break
+                if rcPos+charImg.get_width()>0:
+                    demo.screen.blit(charImg,(rcPos,demo.screenRect.height-20))
+                cpos += charImg.get_width()
+            if rcPos+12<0:
+                self.descriptionFinished = True
     def processEvent(self,demo,event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.currentSceneIndex += 1
             if self.currentSceneIndex>=len(self.scenes):
                 self.currentSceneIndex = 0
             self.currentScene = self.scenes[self.currentSceneIndex]
+            self.descriptionPos = 0
+            self.descriptionFinished = False
+            if hasattr(self.currentScene,"title"):
+                pygame.display.set_caption(self.currentScene.title)
             demo.screen.fill(self.backgroundColor)
             self.currentScene.reset(demo)
 

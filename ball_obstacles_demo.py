@@ -5,6 +5,7 @@ from demo_base import Demo, Scene
 class BallScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
     colorWite = pygame.Color(255,255,255)
+    title = "Balls with obstacles"
     def __init__(self,demo):
         Scene.__init__(self,demo)
         Ball.screenRect = demo.screenRect

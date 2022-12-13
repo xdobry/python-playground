@@ -6,6 +6,8 @@ from demo_base import Demo, Scene
 
 class BlendScene(Scene):
     backgroundColor = pygame.Color((0,0,0))
+    title = "color blend"
+    description = "use blit blend modes to add or sub colors"
     def __init__(self,demo):
         Scene.__init__(self,demo)
         self.circles = []
