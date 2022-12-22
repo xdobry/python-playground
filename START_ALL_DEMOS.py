@@ -21,6 +21,7 @@ import matrix2dTrans_demo
 import textdots_demo
 import processing_demo
 import tree_demo
+import noise2_test
 
 class AllScenes(Scene):
     backgroundColor = pygame.Color((0,0,0))
@@ -46,6 +47,7 @@ class AllScenes(Scene):
             textdots_demo.DotsPlaneScene(demo),
             processing_demo.ProcessingScene(demo),
             tree_demo.TreeScene(demo),
+            noise2_test.NoiseScene(demo),
         ]
         self.currentSceneIndex = 0
         self.currentScene = self.scenes[self.currentSceneIndex]
