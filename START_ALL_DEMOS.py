@@ -22,6 +22,7 @@ import textdots_demo
 import processing_demo
 import tree_demo
 import noise2_test
+import freqmod_demo
 
 class AllScenes(Scene):
     backgroundColor = pygame.Color((0,0,0))
@@ -48,6 +49,7 @@ class AllScenes(Scene):
             processing_demo.ProcessingScene(demo),
             tree_demo.TreeScene(demo),
             noise2_test.NoiseScene(demo),
+            freqmod_demo.NoiseScene(demo),
         ]
         self.currentSceneIndex = 0
         self.currentScene = self.scenes[self.currentSceneIndex]
